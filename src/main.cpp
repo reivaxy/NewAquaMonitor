@@ -9,6 +9,7 @@ SensorPCF8563 rtc;
 WifiManager wifiManager(&settings, &rtc);
 ServerManager server(&settings, 80);
 Screen screen;
+Firebase firebase(&settings, rtc);
 
 
 uint32_t lastTimeUpdate = 0;
@@ -16,6 +17,21 @@ uint32_t lastScreenRefresh = 0;
 
 time_t now = millis();
 int counter = 0;
+
+
+void sendModuleInfo() {
+    JsonDocument doc;
+    JsonObject jsonBufferRoot = doc.to<JsonObject>();
+
+    jsonBufferRoot["type"] = "AquaMonitor";
+    jsonBufferRoot["ip"] = wifiManager.getStationIP();
+    #ifdef GIT_REV
+    jsonBufferRoot["version"] = GIT_REV;
+    #endif
+    firebase.setCommonFields(jsonBufferRoot);
+   
+    firebase.differRecord(MESSAGE_MODULE, jsonBufferRoot);
+}
 
 void setup() {
   Serial.begin(115200);
@@ -33,7 +49,10 @@ void setup() {
   wifiManager.begin();
   server.setScreen(&screen);
   server.begin();
+  firebase.init(WiFi.macAddress().c_str());
+  sendModuleInfo(); 
 }
+
 
 void loop() {
   // Feed the watchdog regularly to prevent resets
@@ -41,6 +60,7 @@ void loop() {
   
   wifiManager.run();
   server.handleClient();
+  firebase.loop();
   
   if (millis() - now > 4000) {
     counter++;
@@ -49,8 +69,8 @@ void loop() {
     //screen.writeText(String(counter), Screen::TextAlignMode::Center, 0, 400);
   }
   
-  // Refresh screen every 10 minutes
-  if (millis() - lastScreenRefresh > 600000) {
+  // Refresh screen every hour
+  if (millis() - lastScreenRefresh > 3600000) {
     lastScreenRefresh = millis();
     screen.refresh(true);
   }

@@ -20,6 +20,7 @@ public:
   String getSettingJsonWithoutSecrets();
 
   void updateSetting(char* message, bool save = true);
+  bool deleteSetting(const char* key);
 
 private:
   Preferences preferences; 

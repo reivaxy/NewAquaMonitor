@@ -5,3 +5,4 @@
 #include "Screen.h"
 #include "WifiManager.h"
 #include "ServerManager.h"
+#include "Firebase.h"

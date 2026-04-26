@@ -4,9 +4,10 @@
 // Define secret keys
 const char* Settings::SECRET_KEYS[] = {
   "home_password",
-  "ap_password"
+  "ap_password",
+  "firebase_token"
 };
-const size_t Settings::SECRET_KEYS_COUNT = 2;
+const size_t Settings::SECRET_KEYS_COUNT = 3;
 
 Settings::Settings() {
 } 
@@ -100,6 +101,15 @@ void Settings::updateSetting(char* message, bool save) {
   } else {
      log_i("Invalid setting format, expected key=value");
   }
+}
+
+bool Settings::deleteSetting(const char* key) {
+  if (!doc[key].isNull()) {
+    doc.remove(key);
+    saveSettings();
+    return true;
+  }
+  return false;
 }
 
 void Settings::saveSettings() {

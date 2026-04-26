@@ -31,7 +31,8 @@ public:
     void drawButton(int x, int y, int width, int height, const String &label);
     void refresh(bool fullRefresh = false);
     void refreshDateTime();
-    void refreshNetworkInfo();
+    void refreshAPInfo();
+    void refreshSTAInfo();
     
     private:
     WifiManager* _wifiManager;

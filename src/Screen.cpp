@@ -110,22 +110,24 @@ void Screen::refresh(bool fullRefresh) {
   } 
   writeTitre("Aqua Monitor", 10);   
   refreshDateTime();
-  refreshNetworkInfo();
+  refreshAPInfo();
+  refreshSTAInfo();
 }
 
-void Screen::refreshNetworkInfo() {
+void Screen::refreshAPInfo() {
   if (_wifiManager == nullptr) return;
   String apSSID = _wifiManager->getAPSSID();
   String apIP = _wifiManager->getAPIP();
   writeText(apSSID, Screen::TextAlignMode::Left, 10, 465);
   writeText(apIP, Screen::TextAlignMode::Left, 10, 500);
-  
-  if (_wifiManager->isConnected()) {
-    String homeSSID = _wifiManager->getStationSSID();
-    String homeIP = _wifiManager->getStationIP();
-    writeText(homeSSID, Screen::TextAlignMode::Right, 790, 465);
-    writeText(homeIP, Screen::TextAlignMode::Right, 790, 500);
-  }
+}
+
+void Screen::refreshSTAInfo() {
+  if (_wifiManager == nullptr || !_wifiManager->isConnected()) return;
+  String homeSSID = _wifiManager->getStationSSID();
+  String homeIP = _wifiManager->getStationIP();
+  writeText(homeSSID, Screen::TextAlignMode::Right, 790, 465);
+  writeText(homeIP, Screen::TextAlignMode::Right, 790, 500);
 }
 
 void Screen::refreshDateTime() {

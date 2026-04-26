@@ -20,6 +20,7 @@ void ServerManager::begin() {
   _webServer->on("/", HTTP_GET, [this]() { handleRoot(); });
   _webServer->on("/apis/settings", HTTP_GET, [this]() { handleSettingsGet(); });
   _webServer->on("/apis/settings", HTTP_POST, [this]() { handleSettingsPost(); });
+  _webServer->on("/apis/settings", HTTP_DELETE, [this]() { handleSettingsDelete(); });
   _webServer->on("/apis/refresh", HTTP_POST, [this]() { handleRefresh(); });
   _webServer->on("/apis/restart", HTTP_POST, [this]() { handleRestart(); });
   _webServer->onNotFound([this]() { handleNotFound(); });
@@ -98,6 +99,21 @@ void ServerManager::handleSettingsPost() {
   
   String json = _settings->getSettingJsonWithoutSecrets();
   _webServer->send(200, "application/json", json);
+}
+
+void ServerManager::handleSettingsDelete() {
+  String name = _webServer->arg("name");
+  if (name.length() == 0) {
+    _webServer->send(400, "application/json", "{\"error\":\"Missing required parameter: name\"}");
+    return;
+  }
+
+  if (_settings->deleteSetting(name.c_str())) {
+    String json = _settings->getSettingJsonWithoutSecrets();
+    _webServer->send(200, "application/json", json);
+  } else {
+    _webServer->send(404, "application/json", "{\"error\":\"Setting not found\"}");
+  }
 }
 
 void ServerManager::setScreen(Screen* screen) {
