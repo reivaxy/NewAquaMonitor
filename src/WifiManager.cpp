@@ -82,7 +82,7 @@ void WifiManager::startAccessPoint() {
   log_i("Access Point started");
   log_i("AP SSID: %s", apSSID);
   log_i("AP IP address: %s", WiFi.softAPIP().toString().c_str());
-  _screen->refreshNetworkInfo();
+  _screen->refreshAPInfo();
 }
 
 void WifiManager::connectToHome() {
@@ -127,7 +127,7 @@ void WifiManager::onWiFiGotIP() {
   log_i("Connected to home network");
   log_i("IP address: %s", WiFi.localIP().toString().c_str());
   if (_screen != nullptr) {
-    _screen->refreshNetworkInfo();
+    _screen->refreshSTAInfo();
   }
 }
 
