@@ -22,7 +22,6 @@ void Screen::init() {
   }
   memset(framebuffer, 0xFF, EPD_WIDTH * EPD_HEIGHT / 2);
   epd_init();
-  epd_poweron();
   refresh(true);
 }
 
@@ -80,7 +79,7 @@ void Screen::writeText(GFXfont *font, const String &text, TextAlignMode mode, in
   
   epd_clear_area(area);
   write_mode(font, text.c_str(), &newX, &y, NULL, BLACK_ON_WHITE, NULL);
-  epd_poweroff_all();
+  epd_poweroff();
 }
 
 

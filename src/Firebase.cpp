@@ -90,7 +90,7 @@ void Firebase::setCommonFields(JsonObject jsonDoc) {
   log_i("Firebase::setCommonFields\n");
 
   // jsonDoc["lang"] = XIOT_LANG;
-  jsonDoc["name"] = "AquaMonitorProto"; // settings->getName();
+  jsonDoc["name"] = settings->getString("module_name", "AquaMonitorProto");
   jsonDoc["mac"] = macAddrStr;
   jsonDoc["date"] = getDateStr();
   jsonDoc["heap_size"] = ESP.getFreeHeap();
