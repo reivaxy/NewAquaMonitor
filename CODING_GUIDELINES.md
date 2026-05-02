@@ -1,4 +1,4 @@
-# Project Coding Guidelines for NewAquaMonitor
+# Project Coding Guidelines for IOTSharedEPaperDisplay
 
 ## Logging Standards
 
